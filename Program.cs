@@ -1,3 +1,5 @@
+using HotelListing.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
@@ -22,7 +24,9 @@ internal class Program
 
         // Add services to the container.
 
-        builder.Services.AddControllers();
+        builder.Services.AddDbContext<DataBaseContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")
+            ));
        
         builder.Services.AddCors(options =>
         {
@@ -37,7 +41,8 @@ internal class Program
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelListing", Version = "v1" });
         });
-        
+
+        builder.Services.AddControllers();
 
         var app = builder.Build();
 
